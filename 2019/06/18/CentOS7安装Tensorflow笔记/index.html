@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="D5D5.io">
 <meta property="og:description" content="在CentOS7下安装和配置Tensorflow-gpu的笔记">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-06-18T01:51:07.000Z">
+<meta property="og:updated_time" content="2019-06-18T05:41:17.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CentOS7安装Tensorflow笔记">
 <meta name="twitter:description" content="在CentOS7下安装和配置Tensorflow-gpu的笔记">
@@ -60,13 +60,13 @@
 			
 				<li><a href="/">Home</a></li>
 	        
-				<li><a href="/tags/tensorflow/">AI</a></li>
-	        
 				<li><a href="/tags/unity/">Game Develop</a></li>
 	        
 				<li><a href="/tags/product/">Product</a></li>
 	        
 				<li><a href="/tags/music/">Music</a></li>
+	        
+				<li><a href="/tags/tensorflow/">AI</a></li>
 	        
 			</ul>
 		</nav>
@@ -148,13 +148,13 @@
 				
 					<li style="width: 20%"><a href="/">Home</a></li>
 		        
-					<li style="width: 20%"><a href="/tags/tensorflow/">AI</a></li>
-		        
 					<li style="width: 20%"><a href="/tags/unity/">Game Develop</a></li>
 		        
 					<li style="width: 20%"><a href="/tags/product/">Product</a></li>
 		        
 					<li style="width: 20%"><a href="/tags/music/">Music</a></li>
+		        
+					<li style="width: 20%"><a href="/tags/tensorflow/">AI</a></li>
 		        
 				</ul>
 			</nav>
@@ -205,13 +205,21 @@
 </ul>
 <h1 id="关于windows下N卡驱动程序的安装"><a href="#关于windows下N卡驱动程序的安装" class="headerlink" title="关于windows下N卡驱动程序的安装"></a>关于windows下N卡驱动程序的安装</h1><p>第一次使用了rpm包安装了CUDA，结果重启时显卡驱动挂了。在分辨率极其变态的前提下重新安装了驱动程序。这里也做一下笔记。</p>
 <ul>
-<li>确认目前的设备所需要的驱动版本<br>  sudo rpm –import <a href="https://www.elrepo.org/RPM-GPG-KEY-elrepo.org" target="_blank" rel="noopener">https://www.elrepo.org/RPM-GPG-KEY-elrepo.org</a><br>  sudo rpm -Uvh <a href="http://www.elrepo.org/elrepo-release-7.0-2.el7.elrepo.noarch.rpm" target="_blank" rel="noopener">http://www.elrepo.org/elrepo-release-7.0-2.el7.elrepo.noarch.rpm</a><br>  yum install nvidia-detect<br>  nvidia-detect -v</li>
-<li>去nv官网下载对应的驱动，CENTOS下为run文件</li>
+<li><p>确认目前的设备所需要的驱动版本</p>
+<p>  sudo rpm –import <a href="https://www.elrepo.org/RPM-GPG-KEY-elrepo.org" target="_blank" rel="noopener">https://www.elrepo.org/RPM-GPG-KEY-elrepo.org</a><br>  sudo rpm -Uvh <a href="http://www.elrepo.org/elrepo-release-7.0-2.el7.elrepo.noarch.rpm" target="_blank" rel="noopener">http://www.elrepo.org/elrepo-release-7.0-2.el7.elrepo.noarch.rpm</a><br>  yum install nvidia-detect<br>  nvidia-detect -v</p>
+</li>
+<li><p>去nv官网下载对应的驱动，CENTOS下为run文件</p>
+</li>
 <li>使用root账户，并进入纯命令行模式(init 3)。在X Window模式下是不能进行显卡驱动安装的</li>
 <li><p>若显卡驱动所需要的内核版本和当前操作系统内核不一致。需要通过安装对应的内核devel包。注意==两侧的空格</p>
 <p>  yum install “kernel-devel-uname-r == $(uname -r)”</p>
 </li>
 </ul>
+<h1 id="关于Cudnn的安装成功验证"><a href="#关于Cudnn的安装成功验证" class="headerlink" title="关于Cudnn的安装成功验证"></a>关于Cudnn的安装成功验证</h1><p>cudnn也是折腾了很久的一步，主要问题出在cudnn的动态链接库上。我最后的解决方案是把lib64下的libcudnn.so.x.x复制到cuda/lib64/的同时，又把他们也复制到/lib64下（复制了两份，libcudnn.so和libcudnn.so.7，其中7为大版本号），然后运行ldconfig -v。可以通过以下方法来确认动态链接库已经包含了：</p>
+<pre><code>ldconfig -p | grep -P &quot;libcudnn.so.\\d+&quot; | head -n 1
+</code></pre><p>理论上通过ln作链接应该是相同的效果，但是我没能成功，所以最后采用了最不要脸的复制的方法……</p>
+<p>然后就可以进行测试了，下载cudnn的官方范例mnistCUDNN，编译运行，最终提示PASS即表明cudnn正常安装并可以使用了。</p>
+<p>这个项目包含在cudnn官方下载的范例代码安装包中。</p>
 
       
 
